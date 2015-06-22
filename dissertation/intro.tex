@@ -1,0 +1,26 @@
+\chapter{Introduction} \label{chap:intro}
+
+\section{Context} \label{sect:thefirst}
+
+The CoWriter project aims to explore how a robot can help with the acquisition of writing skills. This project especially targets children, as handwriting difficulties in children at an early age often negatively affects the academic performance of the students \cite{christensen2005role} in addition to their self-esteem being adversely affected \cite{malloy1995handwriting}, causing them to shy away from expressing what they know \cite{medwell2008handwriting}. The use of robots in the learning activity presents an opportunity for the children to interact with an embodied, physical agent as part of the learning experience.
+Furthermore, the use of robots in handwriting education comes with the potential to engage the child in meta-cognition through the learning by teaching paradigm, wherein a student takes the role of a teacher and experiences stronger educational benefits as a result (such as in \cite{palinscar1984reciprocal}).
+
+A first prototype implemented by D.Hood et al. \cite{hood2015children} has shown good results in terms of robustness and functionality, becoming an appropriately-unskilled peer for a child to tutor. In this context, the CoWriter project is a teachable robotic agent developed to enhance the motivation, self-esteem and educational future of children with writing difficulties. However, there is still some challenges to be overcome in order to sustain long-term interactions with children, at the same time the progression of the writing is assessed properly. This project wants to push forward in this direction.
+
+\section{Problem statement}
+Children's engagement sustainability over time is one of the most important variables to make the process of learning effective \cite{umbach2005faculty}. It is well known that the role of the teacher \cite{smith2005pedagogies}, as well as the way the activity is formulated do matters in the learning efficiency. For instance, a child with difficulties who is trying to teach a robot how to write is more effective than a robot teaching a child (see section \ref{learningby}). In this sense, it would be possible to provide tools for the facilitators to assess the direction of the activity, or an activity change.
+One of the most important challenges in human-robot interaction, or recently coined children-robot interaction, is the adaptivity of the agent taking into account the context of the interaction, modifying its outputs according to the information perceived from the environment and the user and providing eventually an adaptive emotional expression. This ability to adapt has been proved to be beneficial in long-term interactions \cite{tielman2014adaptive} \cite{lim2014mei} with children, manifesting a more positive attitude over time.
+
+\section{Research question}
+The research question addressed in this work has two main parts: The first one relates to the idea of providing an automatic behavioural adaptation based on the engagement assessment, and the second one implicit, how the level of engagement can be measured on real time.
+
+\section{Approach}
+The approach presented has been broken down into a number of sub-tasks for the project,
+which are presented in different chapters. It starts reviewing the relevant literature to identify the state of the art in chapter \ref{chap:litReview} and it continues with the description of the development tools used provided in chapter \ref{chap:tools}. 
+The core of the work starts trying to find an appropriate quantitative metric to assess if a shape is correct or not in chapter \ref{chap:correctness} since the intuition tell us that this output can be extremely useful along iterative sessions in order to see the progression of the user. In chapter \ref{chap:engagementModel} this correctness measurement is used to propose a first statistical model based on time responses to model student engagement.
+Then, a second model based on a computer vision feature acquisition solution is proposed in chapter \ref{chap:systemOverview}. Moreover, this features acquired become helpful to create an adapting behaviour model using user's information. Finally, the design of the experiments are presented in chapter \ref{chap:feasibility} and the results in chapter \ref{chap:results}.
+
+\section{Main contributions}
+The main contribution of this work will be a robust metric to assess the shape correctness of the samples provided by the children. In addition, this metric will be used to provide a first engagement model based on writing times. Additionally, a second model using face features will be presented and evaluated showing results based on proximity and quantity of movement. However, the main contribution of this work is the adaptive behaviour model presented.
+
+

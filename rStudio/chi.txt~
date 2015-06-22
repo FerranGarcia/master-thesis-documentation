@@ -1,0 +1,18 @@
+> d4<-data[data$measureName=="look:",]
+> d4$measureVal<-factor(d4$measureVal)
+> d4$activity<-factor(d4$activity)
+> tab<-xtabs(~d4$activity+d4$measureVal)
+> tab<-tab[2:3,1:7]
+> chisq.test(tab)
+
+	Pearson's Chi-squared test
+
+data:  tab
+X-squared = 537.75, df = 6, p-value < 2.2e-16
+
+> chisq.test(tab)$residuals
+
+           d4$measureVal
+d4$activity       down       left       right      robot
+         cw  0.4811216   4.454916  -0.1499802  -7.701501
+         st -1.1542352 -10.687569   0.3598100  18.476290

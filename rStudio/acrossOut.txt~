@@ -1,0 +1,36 @@
+>movement<-info[info$Event=="movement",]
+>moveChild<-rep(movement$Child,2)
+>moveValue<-c(movement$CoWriter,movement$StoryTelling)
+>moveCondition<-rep(c("CoWriter","StoryTelling"), each=6)
+
+>t.test(moveValue~moveCondition)
+
+	Welch Two Sample t-test
+
+data:  moveValue by moveCondition
+t = 2.0964, df = 10, p-value = 0.06245
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -119.0848 3910.5515
+sample estimates:
+    mean in group CoWriter mean in group StoryTelling 
+                  3658.783                   1763.050 
+
+
+>proximity<-info[info$Event=="proximity",]
+>proxChild<-rep(proximity$Child,2)
+>proxValue<-c(proximity$CoWriter,proximity$StoryTelling)
+>proxCondition<-rep(c("StoryTelling","CoWriter"), each=6)
+
+>t.test(proxValue~proxCondition)
+
+	Welch Two Sample t-test
+
+data:  proxValue by proxCondition
+t = -2.8338, df = 9.7406, p-value = 0.01818
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -32.126674  -3.786659
+sample estimates:
+    mean in group CoWriter mean in group StoryTelling 
+                  65.26000                   83.21667 

@@ -1,0 +1,235 @@
+\documentclass{article}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+<<>>=
+library(plyr)
+library(ggplot2)
+library(gplots)
+library(fmsb)
+setwd("/home/ferran/Desktop/thesis/R_stuff")
+@
+
+
+\section{Sanity check for the observers ratings}
+
+<<echo=TRUE,fig=FALSE>>=
+# check for the cronbach alpha - inter rater reliablity
+
+observations<-read.csv("GT.csv")
+reliabilty<-ddply(observations,.(Child, Observer, Activity), 
+                  summarize,meanRating = mean(Value))
+
+# <SELECT FROM>[<WHERE>,]$<SELECT WHAT>
+
+o1<-reliabilty[reliabilty$Observer==1,]$meanRating
+o2<-reliabilty[reliabilty$Observer==2,]$meanRating
+
+observe<-as.data.frame(cbind(o1,o2))
+
+CronbachAlpha(observe)
+
+#sink("GToutput.txt", append=TRUE, split=FALSE)
+@
+
+<<echo=TRUE,fig=TRUE>>=
+# check for the difference in the ratings across the two activities - ANOVA - analysis of variance
+
+
+
+anova(lm(reliabilty$meanRating~reliabilty$Activity))
+plotmeans(reliabilty$meanRating~reliabilty$Activity)
+
+#F[1,22] = 9.07, p=.006 (p<.01)
+#sink("GToutput.txt", append=TRUE, split=FALSE)
+@
+
+\section{}
+<<>>=
+
+info<-read.csv("Info.csv")
+ 
+# movement across the two aactivities
+
+movement<-info[info$Event=="movement",]
+
+moveChild<-rep(movement$Child,2)
+moveValue<-c(movement$CoWriter,movement$StoryTelling)
+moveCondition<-rep(c("CoWriter","StoryTelling"), each=6)
+
+t.test(moveValue~moveCondition)
+plotmeans(moveValue~moveCondition, xlab="Activity", ylab="Avg. Movement (pixels)")
+
+# proximity across the two activities
+proximity<-info[info$Event=="proximity",]
+
+proxChild<-rep(proximity$Child,2)
+proxValue<-c(proximity$CoWriter,proximity$StoryTelling)
+proxCondition<-rep(c("StoryTelling","CoWriter"), each=6)
+
+t.test(proxValue~proxCondition)
+plotmeans(proxValue~proxCondition, xlab="Activity", ylab="Avg. Proximity (cm)")
+
+#sink("acrossOut.txt", append=TRUE, split=FALSE)
+@
+
+FROM HERE YOU CAN USE ALL THE RESULTS
+
+
+\section{repeated measures}
+<<>>=
+movement<-info[info$Event=="movement",]
+
+moveChild<-rep(movement$Child,2)
+moveValue<-c(movement$CoWriter,movement$StoryTelling)
+moveCondition<-rep(c("CoWriter","StoryTelling"), each=6)
+
+move1<-as.data.frame(cbind(moveChild,moveCondition,moveValue))
+move1$moveValue<-as.numeric(paste(move1$moveValue))
+summary(aov(moveValue~moveCondition+Error(moveValue/moveChild),data=move1))
+#sink("repeated.txt", append=TRUE, split=FALSE)
+
+with(info, interaction.plot(moveChild, moveCondition ,moveValue,
+  ylim = c(1, 8000), lty = c(1, 12), lwd = 3,
+  ylab = "Avg. Movement (pixels)", xlab = "Subject", trace.label = "Activity"))
+
+
+
+left<-info[info$Event=="left",]
+
+leftChild<-rep(left$Child,2)
+leftValue<-c(left$CoWriter,left$StoryTelling)
+leftCondition<-rep(c("CoWriter","StoryTelling"), each=6)
+
+left1<-as.data.frame(cbind(leftChild,leftCondition,leftValue))
+left1$leftValue<-as.numeric(paste(left1$leftValue))
+summary(aov(leftValue~leftCondition+Error(leftValue/leftChild),data=left1))
+
+plotmeans(left1$leftValue~left1$leftCondition)
+
+
+with(info, interaction.plot(leftChild, leftCondition ,leftValue,
+  ylim = c(0, 1), lty = c(1, 12), lwd = 3,
+  ylab = "gaze times", xlab = "subject", trace.label = "event"))
+
+
+proximity<-info[info$Event=="proximity",]
+
+proximityChild<-rep(proximity$Child,2)
+proximityValue<-c(proximity$CoWriter,proximity$StoryTelling)
+proximityCondition<-rep(c("StoryTelling","CoWriter"), each=6)
+
+proximity1<-as.data.frame(cbind(proximityChild,proximityCondition,proximityValue))
+proximity1$proximityValue<-as.numeric(paste(proximity1$proximityValue))
+summary(aov(proximityValue~proximityCondition+Error(proximityValue/proximityChild),data=proximity1))
+#sink("repeated.txt", append=TRUE, split=FALSE)
+
+with(info, interaction.plot(proximityChild, proximityCondition ,proximityValue,
+  ylim = c(40, 100), lty = c(1, 12), lwd = 3,
+  ylab = "Avg. Proximity (cm)", xlab = "Subject", trace.label = "Activity"))
+
+plotmeans(proximity1$proximityValue~proximity1$proximityCondition)
+
+
+right<-info[info$Event=="right",]
+
+rightChild<-rep(right$Child,2)
+rightValue<-c(right$CoWriter,right$StoryTelling)
+rightCondition<-rep(c("CoWriter","StoryTelling"), each=6)
+
+right1<-as.data.frame(cbind(rightChild,rightCondition,rightValue))
+right1$rightValue<-as.numeric(paste(right1$rightValue))
+summary(aov(rightValue~rightCondition+Error(rightValue/rightChild),data=right1))
+
+plotmeans(right1$rightValue~right1$rightCondition)
+
+
+with(info, interaction.plot(proximityChild, proximityCondition ,proximityValue,
+  ylim = c(1, 1000), lty = c(1, 12), lwd = 3,
+  ylab = "mean of pulse", xlab = "time", trace.label = "event"))
+
+@
+
+
+\section{Temporal data}
+<<>>=
+
+observations<-read.csv("toCompare.csv",header=T,stringsAsFactor=F)
+
+
+observations[observations$measureName=="movement:",]$measureVal<-(observations[observations$measureName=="movement:",]$measureVal-min(observations[observations$measureName=="movement:",]$measureVal))/(max(observations[observations$measureName=="movement:",]$measureVal)-min(observations[observations$measureName=="movement:",]$measureVal))
+
+
+observations[observations$measureName=="novelty:",]$measureVal<-(observations[observations$measureName=="novelty:",]$measureVal-min(observations[observations$measureName=="novelty:",]$measureVal))/(max(observations[observations$measureName=="novelty:",]$measureVal)-min(observations[observations$measureName=="novelty:",]$measureVal))
+
+observations[observations$measureName=="proximity:",]$measureVal<-(observations[observations$measureName=="proximity:",]$measureVal-min(observations[observations$measureName=="proximity:",]$measureVal))/(max(observations[observations$measureName=="proximity:",]$measureVal)-min(observations[observations$measureName=="proximity:",]$measureVal))
+
+
+#################
+st<-observations[observations$measureName=="proximity:" & observations$activity=="st",]
+st<-arrange(st,as.factor(st$child),as.numeric(paste(st$timestamp)))
+
+c<-tapply(as.numeric(paste(st$timestamp)),as.factor(st$child),min)
+tapply(as.numeric(paste(st$timestamp)),as.factor(st$child),max)
+
+ggplot(observations[observations$measureName=="proximity:",],aes(x=timestamp,y=as.numeric(paste(measureVal)),group=measureName,colour=measureName))+stat_smooth()+geom_vline(xintercept=c)+ ylab("Avg. Proximity (cm)") + xlab("Time") +ggtitle("Average Subject Proximity")
+
+c1.prox.cw<-observations[as.numeric(paste(observations$timestamp))<=76 & observations$measureName=="proximity:" & observations$activity=="cw" & observations$child=="1",]
+c1.prox.st<-observations[as.numeric(paste(observations$timestamp))<=854 & observations$measureName=="proximity:" & observations$activity=="st"  & observations$child=="1",]
+cw<-tapply(as.numeric(paste(c1.prox.cw$measureVal)),as.numeric(paste(c1.prox.cw$timestamp)),mean,na.rm=T)
+st<-tapply(as.numeric(paste(c1.prox.st$measureVal)),as.numeric(paste(c1.prox.st$timestamp)),mean,na.rm=T)
+########################
+
+st<-observations[observations$measureName=="movement:" & observations$activity=="st",]
+st<-arrange(st,as.factor(st$child),as.numeric(paste(st$timestamp)))
+
+c<-tapply(as.numeric(paste(st$timestamp)),as.factor(st$child),min)
+tapply(as.numeric(paste(st$timestamp)),as.factor(st$child),max)
+
+ggplot(observations[observations$measureName=="movement:",],aes(x=timestamp,y=as.numeric(paste(measureVal)),group=measureName,colour=measureName))+stat_smooth()+geom_vline(xintercept=c)
+
+c1.ob.cw<-observations[as.numeric(paste(observations$timestamp))<=76 & observations$measureName=="movement:" & observations$activity=="cw" & observations$child=="1",]
+c1.ob.st<-observations[as.numeric(paste(observations$timestamp))<=854 & observations$measureName=="movement:" & observations$activity=="st"  & observations$child=="1",]
+cw<-tapply(as.numeric(paste(c1.ob.cw$measureVal)),as.numeric(paste(c1.ob.cw$timestamp)),mean,na.rm=T)
+st<-tapply(as.numeric(paste(c1.ob.st$measureVal)),as.numeric(paste(c1.ob.st$timestamp)),mean,na.rm=T)
+######################
+
+summary(aov(measureVal~activity+Error(measureVal/child*timestamp),
+            data=observations[observations$measureName=="proximity:",]))
+summary(aov(measureVal~activity+Error(measureVal/child*timestamp),
+            data=observations[observations$measureName=="movement:",]))
+
+try1<-observations[observations$measureName=="proximity:" & observations$child=="1",]
+
+@
+
+\section{New}
+<<>>=
+data<-read.csv("toCompare.csv")
+names(data)
+levels(data$measureName)
+
+data$measureVal<-as.numeric(paste(data$measureVal))
+library(nlme)
+d1<-data[data$measureName=="proximity:",]
+anova(lme(measureVal~activity,data=d1,random=~timestamp|child))
+
+
+d2<-data[data$measureName=="movement:",]
+anova(lme(measureVal~activity,data=d2,random=~timestamp|child))
+
+
+d3<-data[data$measureName=="novelty:",]
+anova(lme(measureVal~activity,data=d3,random=~timestamp|child))
+
+data<-read.csv("toCompare.csv")
+d4<-data[data$measureName=="look:",]
+d4$measureVal<-factor(d4$measureVal)
+d4$activity<-factor(d4$activity)
+tab<-xtabs(~d4$activity+d4$measureVal)
+tab<-tab[2:3,1:7]
+chisq.test(tab)
+chisq.test(tab)$residuals
+ @
+\end{document}

@@ -1,0 +1,212 @@
+\documentclass{article}
+
+\usepackage{Sweave}
+\begin{document}
+\input{feran-concordance}
+
+\begin{Schunk}
+\begin{Sinput}
+> library(plyr)
+> library(ggplot2)
+> library(gplots)
+> library(fmsb)
+> setwd("/home/ferran/Desktop/thesis/R_stuff")
+\end{Sinput}
+\end{Schunk}
+
+
+\section{Sanity check for the observers ratings}
+
+\begin{Schunk}
+\begin{Sinput}
+> # check for the cronbach alpha - inter rater reliablity
+> 
+> observations<-read.csv("GT.csv")
+> reliabilty<-ddply(observations,.(Child, Observer, Activity), summarize,meanRating = mean(Value))
+> # <SELECT FROM>[<WHERE>,]$<SELECT WHAT>
+> 
+> o1<-reliabilty[reliabilty$Observer==1,]$meanRating
+> o2<-reliabilty[reliabilty$Observer==2,]$meanRating
+> observe<-as.data.frame(cbind(o1,o2))
+> CronbachAlpha(observe)
+\end{Sinput}
+\begin{Soutput}
+[1] 0.8213138
+\end{Soutput}
+\begin{Sinput}
+> 
+\end{Sinput}
+\end{Schunk}
+
+\begin{Schunk}
+\begin{Sinput}
+> # check for the difference in the ratings across the two activities - ANOVA - analysis of variance
+> 
+> 
+> 
+> anova(lm(reliabilty$meanRating~reliabilty$Activity))
+\end{Sinput}
+\begin{Soutput}
+Analysis of Variance Table
+
+Response: reliabilty$meanRating
+                    Df Sum Sq Mean Sq F value   Pr(>F)   
+reliabilty$Activity  1 3.2504  3.2504   9.072 0.006414 **
+Residuals           22 7.8824  0.3583                    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+\end{Soutput}
+\begin{Sinput}
+> plotmeans(reliabilty$meanRating~reliabilty$Activity)
+> 
+> 
+> #F[1,22] = 9.07, p=.006 (p<.01)
+> 
+\end{Sinput}
+\end{Schunk}
+\includegraphics{feran-003}
+
+\section{}
+\begin{Schunk}
+\begin{Sinput}
+> info<-read.csv("Info.csv")
+> # movement across the two aactivities
+> 
+> movement<-info[info$Event=="movement",]
+> moveChild<-rep(movement$Child,2)
+> moveValue<-c(movement$CoWriter,movement$StoryTelling)
+> moveCondition<-rep(c("CoWriter","StoryTelling"), each=6)
+> t.test(moveValue~moveCondition)
+\end{Sinput}
+\begin{Soutput}
+	Welch Two Sample t-test
+
+data:  moveValue by moveCondition
+t = 2.0964, df = 10, p-value = 0.06245
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -119.0848 3910.5515
+sample estimates:
+    mean in group CoWriter mean in group StoryTelling 
+                  3658.783                   1763.050 
+\end{Soutput}
+\begin{Sinput}
+> plotmeans(moveValue~moveCondition)
+> 
+> 
+> 
+\end{Sinput}
+\end{Schunk}
+
+FROM HERE YOU CAN USE ALL THE RESULTS
+
+
+\section{repeated measures}
+\begin{Schunk}
+\begin{Sinput}
+> movement<-info[info$Event=="movement",]
+> moveChild<-rep(movement$Child,2)
+> moveValue<-c(movement$CoWriter,movement$StoryTelling)
+> moveCondition<-rep(c("CoWriter","StoryTelling"), each=6)
+> move1<-as.data.frame(cbind(moveChild,moveCondition,moveValue))
+> move1$moveValue<-as.numeric(paste(move1$moveValue))
+> summary(aov(moveValue~moveCondition+Error(moveValue/moveChild),data=move1))
+\end{Sinput}
+\begin{Soutput}
+Error: moveValue:moveChild
+              Df   Sum Sq Mean Sq F value Pr(>F)
+moveCondition  1  5888895 5888895   1.217  0.332
+Residuals      4 19354992 4838748               
+
+Error: Within
+              Df  Sum Sq Mean Sq F value  Pr(>F)   
+moveCondition  1 7943178 7943178   18.69 0.00755 **
+Residuals      5 2124947  424989                   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+\end{Soutput}
+\begin{Sinput}
+> with(info, interaction.plot(moveChild, moveCondition ,moveValue,
++   ylim = c(1, 10000), lty = c(1, 12), lwd = 3,
++   ylab = "mean of pulse", xlab = "time", trace.label = "event"))
+> left<-info[info$Event=="left",]
+> leftChild<-rep(left$Child,2)
+> leftValue<-c(left$CoWriter,left$StoryTelling)
+> leftCondition<-rep(c("CoWriter","StoryTelling"), each=6)
+> left1<-as.data.frame(cbind(leftChild,leftCondition,leftValue))
+> left1$leftValue<-as.numeric(paste(left1$leftValue))
+> summary(aov(leftValue~leftCondition+Error(leftValue/leftChild),data=left1))
+\end{Sinput}
+\begin{Soutput}
+Error: leftValue:leftChild
+              Df Sum Sq Mean Sq F value Pr(>F)
+leftCondition  1 0.1283 0.12833   3.419  0.138
+Residuals      4 0.1502 0.03754               
+
+Error: Within
+              Df  Sum Sq Mean Sq F value Pr(>F)  
+leftCondition  1 0.07694 0.07694   5.268 0.0702 .
+Residuals      5 0.07302 0.01460                 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+\end{Soutput}
+\begin{Sinput}
+> plotmeans(left1$leftValue~left1$leftCondition)
+> with(info, interaction.plot(leftChild, leftCondition ,leftValue,
++   ylim = c(0, 1), lty = c(1, 12), lwd = 3,
++   ylab = "gaze times", xlab = "subject", trace.label = "event"))
+> proximity<-info[info$Event=="proximity",]
+> proximityChild<-rep(proximity$Child,2)
+> proximityValue<-c(proximity$CoWriter,proximity$StoryTelling)
+> proximityCondition<-rep(c("CoWriter","StoryTelling"), each=6)
+> proximity1<-as.data.frame(cbind(proximityChild,proximityCondition,proximityValue))
+> proximity1$proximityValue<-as.numeric(paste(proximity1$proximityValue))
+> summary(aov(proximityValue~proximityCondition+Error(proximityValue/proximityChild),data=proximity1))
+\end{Sinput}
+\begin{Soutput}
+Error: proximityValue:proximityChild
+                   Df Sum Sq Mean Sq F value Pr(>F)
+proximityCondition  1   10.3   10.33   0.045  0.842
+Residuals           4  915.0  228.74               
+
+Error: Within
+                   Df Sum Sq Mean Sq F value  Pr(>F)   
+proximityCondition  1  982.5   982.5    18.6 0.00763 **
+Residuals           5  264.1    52.8                   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+\end{Soutput}
+\begin{Sinput}
+> plotmeans(proximity1$proximityValue~proximity1$proximityCondition)
+> right<-info[info$Event=="right",]
+> rightChild<-rep(right$Child,2)
+> rightValue<-c(right$CoWriter,right$StoryTelling)
+> rightCondition<-rep(c("CoWriter","StoryTelling"), each=6)
+> right1<-as.data.frame(cbind(rightChild,rightCondition,rightValue))
+> right1$rightValue<-as.numeric(paste(right1$rightValue))
+> summary(aov(rightValue~rightCondition+Error(rightValue/rightChild),data=right1))
+\end{Sinput}
+\begin{Soutput}
+Error: rightValue:rightChild
+               Df    Sum Sq   Mean Sq F value Pr(>F)
+rightCondition  1 0.0000001 9.000e-08       0  0.986
+Residuals       3 0.0006727 2.243e-04               
+
+Error: Within
+               Df    Sum Sq   Mean Sq F value Pr(>F)
+rightCondition  1 2.494e-36 2.494e-36   0.998  0.356
+Residuals       6 1.500e-35 2.499e-36               
+\end{Soutput}
+\begin{Sinput}
+> plotmeans(right1$rightValue~right1$rightCondition)
+> with(info, interaction.plot(proximityChild, proximityCondition ,proximityValue,
++   ylim = c(1, 1000), lty = c(1, 12), lwd = 3,
++   ylab = "mean of pulse", xlab = "time", trace.label = "event"))
+> 
+> 
+\end{Sinput}
+\end{Schunk}
+
+
+
+\end{document}

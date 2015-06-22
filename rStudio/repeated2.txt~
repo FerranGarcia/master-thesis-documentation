@@ -1,0 +1,26 @@
+> summary(aov(measureVal~activity+Error(measureVal/child*timestamp),
+            data=observations[observations$measureName=="movement:",]))
+
+Error: timestamp
+         Df   Sum Sq  Mean Sq
+activity  1 22173341 22173341
+
+Error: measureVal:child
+            Df    Sum Sq   Mean Sq F value Pr(>F)
+activity     1 3.077e+08 307736431   1.408  0.236
+Residuals 1370 2.995e+11 218593349               
+
+Error: measureVal:timestamp
+           Df    Sum Sq  Mean Sq F value Pr(>F)
+activity    1 1.867e+07 18668930   1.292  0.256
+Residuals 607 8.770e+09 14447608               
+
+Error: measureVal:child:timestamp
+           Df    Sum Sq Mean Sq F value Pr(>F)
+activity    1   2110330 2110330   0.729  0.394
+Residuals 286 828144263 2895609               
+
+Error: Within
+           Df    Sum Sq Mean Sq F value Pr(>F)
+activity    1    291297  291297   0.551  0.458
+Residuals 270 142661304  528375              

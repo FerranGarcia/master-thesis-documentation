@@ -1,0 +1,24 @@
+> names(data)
+> levels(data$measureName)
+> data$measureVal<-as.numeric(paste(data$measureVal))
+
+> d1<-data[data$measureName=="proximity:",]
+> anova(lme(measureVal~activity,data=d1,random=~timestamp|child))
+
+            numDF denDF  F-value p-value
+(Intercept)     1  5362 389.7358  <.0001
+activity        1  5362 145.3237  <.0001
+
+> d2<-data[data$measureName=="movement:",]
+> anova(lme(measureVal~activity,data=d2,random=~timestamp|child))
+
+            numDF denDF  F-value p-value
+(Intercept)     1  2532 333.7666  <.0001
+activity        1  2532   1.1927  0.2749
+
+> d3<-data[data$measureName=="saliency:",]
+> anova(lme(measureVal~activity,data=d3,random=~timestamp|child))
+
+            numDF denDF  F-value p-value
+(Intercept)     1   586 86.72969  <.0001
+activity        1   586  0.29876  0.5849

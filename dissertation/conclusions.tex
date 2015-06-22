@@ -1,0 +1,42 @@
+\chapter{Conclusions} \label{chap:conclusions}
+
+It has been a long process from the design till the testing phase. Due to the variety of technologies used as well as the number of experiments scheduled, several conclusions can be extracted from both the mathematical and the socio-educational point of view. The challenges involved in developing such a technology which have been addressed in this work include:
+
+\begin{itemize}
+\item Real-time robot adaptive behaviour based on face features.
+\item Robust face detection acquisition.
+\item Engagement assessment using visual and non-visual measurements.
+\item Improvement of the user experience by addition of new features.
+\item Correctness assessment of shape's letters. 
+\end{itemize}
+
+Based on Chapter \ref{chap:correctness}, we have provided a good metric based on SVM for handwriting shape classification but also City block distance for shape comparison in the eigenspace. In addition, the output clustered provided allow us to classify and check the most common errors in children letter writing if we need it. Moreover, part of this outcomes has been used  and embedded in an Android-ROS application with the goal of providing the assessment information to the facilitator. 
+
+The adaptive behaviour model propose based on online acquisition of user information such as proximity, quantity of movement and gaze direction among others, seems to be a good way to model a rich set of behaviours according to the specific context of the situation. In addition, it allow us to smooth the interaction during the activity with the child without colliding in the use of the same robot resources and acting independently of the activity performed.  
+
+One of the most important outcomes of Chapter \ref{chap:feasibility} on the technical aspect has been the extension of the current state machine framework, allowing the addition and transition among different activities. Therefore, the new framework allows the definition of new activities and the condition of transition between them in a flexible and easy way. Furthermore, the feasibility study shows how deterministic can be the choice of the age range in an educational context as well as the protocol of the experiment in to reduce external factors that could influence in the data acquisition. For instance, part of the movement captured during the activity could have been induced by external factors such as the facilitator providing explanations, so it is a must although not trivial to anticipate this measurement for its subtraction.
+
+Due to the previous assumption, the gaze of the children by itself can not be a reliable indicator for child's engagement neither, at least based on the current implementation (a better suggestion would be the use of an eye tracker). However, it has been very useful in the quantification of the facilitator involvement in the activity. It proves that the percentage of implication of the person helping during the activity time, specially in the CoWriter, is high. Therefore, it would be necessary to continue working on the automation of the system reducing the human intervention using better explanation or self-descriptive interactive situations.
+
+Finally, the use of the child's face proximity to the field of interaction as an indicator of engagement in the specific context of the writing and the story telling activities it is significant since in most of the cases the proximity decreases during a non-engaging and passive task.
+
+\section{Future work}
+
+Additional work needs to be done in two aspects in particular: The robot independence from the facilitator and the online engagement detection for practical use.  
+
+The independence of the system without requiring any human intervention is the most complex and challenging one. It is necessary to design interaction protocols with a continuous and quick feedback to the user. For instance, the system has been improved from the interactivity and flexibility points of view, adding an Android application that publishes the desired word written by the facilitator, or the one corresponding to the button pressed by the child. However, it slightly adapts to short-term events such as a gesture generation according to the context of activity. For instance, a good performance in the writing of a word, should lead to show a positive gesture from the robot that would reinforce the children interacting.
+
+To solve the previous limitation it would be necessary to expand the current model to be able to provide two outputs: Behaviours and gestures, long-term and short-term responses respectively. A reasonable approach would be to design two different internal ways of motion externalization. But also the improvements of certain functionalities such as the detection of the engagement level need additional work. Actually, it needs to be properly tested by the acquisition of the suitable children data; the writing responses and the correct assessment of the shape quality from 7 years old children with handwriting problems but with previous knowledge.
+
+Apart from the two previous points, several minor changes and long term non-trivial implementations could be done. An example, is an improvement of the current version of the $ nao_writing $ package, responsible for the hand movements during the writing process, to perform them smoother and more accurate. Moreover, the aspect to consider in the long term would be to be able to execute the whole Cowriter system without a computer. Thus, it would be useful the optimization of the code to run in the internal NAO processor (Intel Atom 1.6 GHz). In this way, it would allow an easy set-up that could be easily prepared by a non-technical user.
+
+Currently, the system has been tested in a real context with a 6 years old child with several difficulties in the acquisition of the handwriting supervised by a ergo-therapist in Geneva. The feedback extracted so far has been extremely valuable to redefine the current procedure as well as to point the most necessary improvements for a real scenario. But the most relevant outcome will be to test the system efficiency in the child handwriting improvement during a long term intervention.
+
+Finally, in order to maximize the use of the landmarkers provided by dlib and at the same time allow the agent to know, not only about the child but also about the environment, would be possible to extract the 3D head pose estimation. Moreover, using a predefined 3D map with the most relevant things or people in the room, it would be possible to make the robot aware of the focus of attention of the child in the room at any moment.
+
+On the educational side, open questions include how the handwriting error generation of the
+system may be abstracted to a higher level of control so that a teacher may configure it to work
+with a child on a particular type of mistakes, based on the child’s performance. Where would
+the balance lie between developing autonomous capabilities for the system to determine the
+child’s difficulties, and empowering the teaching staff to decide for themselves instead? And,
+as a result, the most important question in this area is to address what impact to the outcomes of a handwriting intervention the addition of such a teachable robotic agent would have.

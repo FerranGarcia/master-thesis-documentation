@@ -1,0 +1,59 @@
+> summary(aov(measureVal~activity+Error(measureVal/child*timestamp),
+            data=observations[observations$measureName=="proximity:",]))
+
+Error: timestamp
+         Df Sum Sq Mean Sq
+activity  1  411.9   411.9
+
+Error: measureVal:child
+           Df  Sum Sq Mean Sq F value   Pr(>F)    
+activity    1  769780  769780   80.61 1.44e-15 ***
+Residuals 143 1365621    9550                     
+---
+
+Error: measureVal:timestamp
+           Df Sum Sq Mean Sq F value  Pr(>F)    
+activity    1  55596   55596    40.9 2.8e-09 ***
+Residuals 127 172628    1359                    
+---
+
+Error: measureVal:child:timestamp
+           Df Sum Sq Mean Sq F value   Pr(>F)    
+activity    1  18703   18703   21.01 1.17e-05 ***
+Residuals 115 102355     890                     
+---
+Signif. codes:  0 *** 0.001 ** 0.01 * 0.05 . 0.1   1
+
+Error: Within
+            Df Sum Sq Mean Sq F value Pr(>F)
+activity     1      0   0.142   0.007  0.933
+Residuals 4978  98672  19.822 
+
+
+
+> summary(aov(measureVal~activity+Error(measureVal/child*timestamp),
+            data=observations[observations$measureName=="movement:",]))
+
+Error: timestamp
+         Df   Sum Sq  Mean Sq
+activity  1 22173341 22173341
+
+Error: measureVal:child
+            Df    Sum Sq   Mean Sq F value Pr(>F)
+activity     1 3.077e+08 307736431   1.408  0.236
+Residuals 1370 2.995e+11 218593349               
+
+Error: measureVal:timestamp
+           Df    Sum Sq  Mean Sq F value Pr(>F)
+activity    1 1.867e+07 18668930   1.292  0.256
+Residuals 607 8.770e+09 14447608               
+
+Error: measureVal:child:timestamp
+           Df    Sum Sq Mean Sq F value Pr(>F)
+activity    1   2110330 2110330   0.729  0.394
+Residuals 286 828144263 2895609               
+
+Error: Within
+           Df    Sum Sq Mean Sq F value Pr(>F)
+activity    1    291297  291297   0.551  0.458
+Residuals 270 142661304  528375              
