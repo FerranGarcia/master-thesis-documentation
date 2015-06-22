@@ -1,4 +1,4 @@
-# master-thesis-documentation
+# Journal paper and Master thesis dissertation
 
 
 dissertation: Contains en extensive document of the work done.
